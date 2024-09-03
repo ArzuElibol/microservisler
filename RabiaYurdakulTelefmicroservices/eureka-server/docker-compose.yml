@@ -1,0 +1,70 @@
+version: '3.3'
+
+services:
+  eureka-server:
+    image: eureka-server
+    container_name: eureka-server
+    ports:
+      - 8761:8761
+    environment:
+      - SPRING_PROFILES_ACTIVE=stage
+    networks:
+      - postgres
+    hostname: eureka-server
+
+  config-server:
+    image: config-server
+    container_name: config-server
+    ports:
+      - 8888:8888
+    environment:
+      - SPRING_PROFILES_ACTIVE=stage
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_CONFIG_ACTIVATE_ON_PROFILE=stage
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://github.com/ArzuElibol/stockmanagement-configs.git
+    depends_on:
+      - eureka-server
+    networks:
+      - postgres
+
+  product-service:
+    image: product-service
+    container_name: product-service
+    ports:
+      - 9788:9788
+    environment:
+      - SPRING_PROFILES_ACTIVE=stage
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SERVER_PORT=9788
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5433/stock_management
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=1
+    depends_on:
+      - eureka-server
+      - config-server
+    networks:
+      - postgres
+
+  api-gateway:
+    image: api-gateway
+    container_name: api-gateway
+    ports:
+      - 8762:8762
+    environment:
+      - SPRING_PROFILES_ACTIVE=stage
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://host.docker.internal:8761/eureka
+      - SERVER_PORT=8762
+    depends_on:
+      - eureka-server
+      - product-service
+      - config-server
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:

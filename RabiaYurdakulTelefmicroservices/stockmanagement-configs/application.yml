@@ -1,0 +1,12 @@
+server:
+  port: 0
+  shutdown: graceful   
+  # serverın nasıl kapatılacağını beliler. requestlerin kaybını önlemek için graceful kullanılır.
+
+spring:
+  cloud:
+    config:
+      allow-override: true
+      override-none: true
+    refresh:
+      refreshable: false

@@ -1,0 +1,9 @@
+com\amigoscode\fraud\customer\CustomerRegistrationRequest.class
+com\amigoscode\fraud\customer\Customer$CustomerBuilder.class
+com\amigoscode\fraud\customer\Customer.class
+com\amigoscode\fraud\customer\CustomerConfig.class
+com\amigoscode\fraud\customer\CustomerRepository.class
+com\amigoscode\fraud\customer\CustomerService.class
+com\amigoscode\fraud\customer\FraudCheckResponse.class
+com\amigoscode\fraud\customer\CustomerApplication.class
+com\amigoscode\fraud\customer\CustomerController.class

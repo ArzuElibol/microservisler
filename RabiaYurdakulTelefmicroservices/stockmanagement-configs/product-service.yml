@@ -1,0 +1,97 @@
+spring:
+  application:
+    name: product-service
+  profiles:
+    active: stage
+  main:
+    allow-bean-definition-overriding: true  # baz? durumlarda spring supported k�t�phanelerden kaynakl? bean �ak??malar? olabiliyor. bunun �n�ne ge�mek i�in bunu true ayarl?yoruz
+
+server:
+  port: 9788
+
+
+logging:
+  level:
+    root: off
+    com:
+      example: debug
+
+---
+spring:
+  config:
+    activate:
+      on-profile: localhost
+  #  cloud:
+  #    config:
+  #      uri: http://localhost:8888
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: stock_management
+  datasource:
+    url: "jdbc:postgresql://localhost:5433/stock_management"
+    username: postgres
+    password: 1
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+  client:
+    service-url:
+      defaultzone: http://localhost:8761/eureka
+
+---
+spring:
+  config:
+    activate:
+      on-profile: stage
+  #  cloud:
+  #    config:
+  #      uri: http://localhost:8888
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: stock_management
+  datasource:
+    url: "jdbc:postgresql://localhost:5433/stock_management"
+    username: postgres
+    password: 1
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+  client:
+    service-url:
+      defaultzone: http://eureka-server:8761/eureka
+
+
+
+#spring.application.name=product-service
+#server.port=9788
+#
+## JPA ve Hibernate ayarlar?
+#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+#spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.hibernate.show-sql=true
+#spring.jpa.properties.javax.persistence.validation.mode=none
+#
+## Veritaban? ba?lant? ayarlar?
+#spring.datasource.url=jdbc:postgresql://localhost:5432/stock_management
+#spring.datasource.username=postgres
+#spring.datasource.password=1
+#
+## Logging ayarlar?
+#logging.level.root=off
+#logging.level.com.example=DEBUG
+##root olarak ayarlanm?? bir loglama seviyesi uygulaman?n t�m oglar? i�in ge�erli olur. propety de?erini ise debug olarak ayarlad?k. bu da uygulama loglar?n? debug seviyesinde kaydedecek demelktir
+## off yazsayd?k sadece uygulamadaki loglar g�r�n�r. debug yaz?nca; info warn error ve debug mesajlar? g�r�n�r. error hatalar?, info yaz?nca; error, warn ve info mesajlar? g�r�n?�r.
+## trace ise uygulaman?n �al??ma s�recinde olu?an t�m bilgi mesajlar?n? g�sterecekti.
+#
+#eureka.instance.instance-id= ${spring.application.name}:${random.uuid}
+#eureka.client.serviceUrl.defaultZone= http://localhost:8761/eureka
